@@ -1,26 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useReducer, useEffect } from 'react';
 import './App.css';
+import {
+	AppContext,
+	actions,
+	initialState,
+	reducer
+} from './state';
+import Board from './components/Board';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+	const [state, dispatch] = useReducer(reducer, initialState);
+
+	useEffect(() => {
+		console.log(state);
+	}, [state]);
+
+	return (
+		<AppContext.Provider value={{ state, dispatch }}>
+			<div className="App">
+				<h1
+					onClick={() => {
+						dispatch({ type: actions.START_GAME});
+					}}
+				>
+					Hasil
+				</h1>
+				{
+					state.game.inProgress
+						? <Board />
+						: <p>Click title to start game.</p>
+				}
+			</div>
+		</AppContext.Provider>
+
+	);
 }
 
 export default App;
